@@ -35,7 +35,7 @@ export function CharacterImage({
           onError={() => setImgError(true)}
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-accent">
+        <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-accent">
           <span className="font-display text-4xl font-bold text-muted-foreground">
             {initials(name)}
           </span>

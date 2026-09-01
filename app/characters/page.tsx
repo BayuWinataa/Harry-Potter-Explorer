@@ -32,9 +32,19 @@ const COUNT_LABEL: Record<Scope, string> = {
 const FILTERS = ['All', ...HOUSES] as const;
 const PAGE_SIZE = 24;
 
+const SORT_OPTIONS = [
+  { value: 'name-asc', label: 'Name A–Z' },
+  { value: 'name-desc', label: 'Name Z–A' },
+  { value: 'house-asc', label: 'House A–Z' },
+  { value: 'house-desc', label: 'House Z–A' },
+] as const;
+
+type SortBy = (typeof SORT_OPTIONS)[number]['value'];
+
 export default function CharactersPage() {
   const [scope, setScope] = useState<Scope>('all');
   const [house, setHouse] = useState<(typeof FILTERS)[number]>('All');
+  const [sortBy, setSortBy] = useState<SortBy>('name-asc');
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [debouncedQuery] = useDebounce(query, 400);
@@ -68,9 +78,27 @@ export default function CharactersPage() {
     (c) => house === 'All' || c.house === house,
   );
 
-  const pageCount = Math.max(1, Math.ceil(characters.length / PAGE_SIZE));
+  const sorted = useMemo(() => {
+    const list = [...characters];
+    switch (sortBy) {
+      case 'name-desc':
+        return list.sort((a, b) => b.name.localeCompare(a.name));
+      case 'house-asc':
+        return list.sort((a, b) =>
+          (a.house || 'Unknown').localeCompare(b.house || 'Unknown'),
+        );
+      case 'house-desc':
+        return list.sort((a, b) =>
+          (b.house || 'Unknown').localeCompare(a.house || 'Unknown'),
+        );
+      default:
+        return list.sort((a, b) => a.name.localeCompare(b.name));
+    }
+  }, [characters, sortBy]);
+
+  const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
-  const visible = characters.slice(
+  const visible = sorted.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE,
   );
@@ -120,31 +148,48 @@ export default function CharactersPage() {
         </div>
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-2">
-        {FILTERS.map((h) => {
-          const active = house === h;
-          const color = h !== 'All' ? HOUSE_COLORS[h] : null;
-          return (
-            <button
-              key={h}
-              onClick={() => setHouse(h)}
-              className={cn(
-                'rounded-full border px-3 py-1.5 text-sm transition-colors',
-                active
-                  ? 'border-transparent font-medium'
-                  : 'border-border text-muted-foreground hover:bg-muted',
-              )}
-              style={
-                active && color
-                  ? { backgroundColor: color.bg, color: color.color }
-                  : undefined
-              }
-              aria-pressed={active}
-            >
-              {h}
-            </button>
-          );
-        })}
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-2">
+          {FILTERS.map((h) => {
+            const active = house === h;
+            const color = h !== 'All' ? HOUSE_COLORS[h] : null;
+            return (
+              <button
+                key={h}
+                onClick={() => setHouse(h)}
+                className={cn(
+                  'rounded-full border px-3 py-1.5 text-sm transition-colors',
+                  active
+                    ? 'border-transparent font-medium'
+                    : 'border-border text-muted-foreground hover:bg-muted',
+                )}
+                style={
+                  active && color
+                    ? { backgroundColor: color.bg, color: color.color }
+                    : undefined
+                }
+                aria-pressed={active}
+              >
+                {h}
+              </button>
+            );
+          })}
+        </div>
+        <label className="sr-only" htmlFor="sort">
+          Sort characters
+        </label>
+        <select
+          id="sort"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as SortBy)}
+          className="rounded-lg border border-input bg-background px-2 py-1.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+        >
+          {SORT_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
       </div>
 
       <section className="mt-8">
@@ -153,7 +198,7 @@ export default function CharactersPage() {
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className="aspect-[3/4] animate-pulse rounded-lg border border-border bg-muted"
+                className="aspect-3/4 animate-pulse rounded-lg border border-border bg-muted"
               />
             ))}
           </div>
