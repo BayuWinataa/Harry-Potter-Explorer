@@ -38,22 +38,6 @@ export const fetchCharacterById = async (id: string): Promise<Character> => {
 };
 
 /**
- * Fetches all Hogwarts students
- */
-export const fetchStudents = async (): Promise<Character[]> => {
-  const response = await api.get<Character[]>('/characters/students');
-  return response.data;
-};
-
-/**
- * Fetches all Hogwarts staff
- */
-export const fetchStaff = async (): Promise<Character[]> => {
-  const response = await api.get<Character[]>('/characters/staff');
-  return response.data;
-};
-
-/**
  * Fetches all spells
  */
 export const fetchSpells = async (): Promise<Spell[]> => {

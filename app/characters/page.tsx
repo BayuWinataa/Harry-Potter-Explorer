@@ -7,11 +7,7 @@ import { useDebounce } from 'use-debounce';
 import Fuse from 'fuse.js';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
-import {
-  fetchCharacters,
-  fetchStaff,
-  fetchStudents,
-} from '@/services/hpApi';
+import { fetchCharacters } from '@/services/hpApi';
 import { HOUSES, HOUSE_COLORS, hpQueryKeys } from '@/types/hp';
 import { CharacterCard, characterKey } from '@/components/character-card';
 import { cn } from '@/lib/utils';
@@ -51,37 +47,36 @@ function CharactersContent() {
     houseParam && HOUSES.includes(houseParam as (typeof HOUSES)[number])
       ? (houseParam as (typeof FILTERS)[number])
       : 'All';
-  const setHouse = (h: (typeof FILTERS)[number]) =>
+  const setHouse = (h: (typeof FILTERS)[number]) => {
+    setPage(1);
     router.push(h === 'All' ? '/characters' : `/characters?house=${h}`);
+  };
   const [sortBy, setSortBy] = useState<SortBy>('name-asc');
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [debouncedQuery] = useDebounce(query, 400);
 
-  const queries = {
-    all: useQuery({
-      queryKey: hpQueryKeys.characters,
-      queryFn: fetchCharacters,
-    }),
-    students: useQuery({
-      queryKey: hpQueryKeys.students,
-      queryFn: fetchStudents,
-    }),
-    staff: useQuery({
-      queryKey: hpQueryKeys.staff,
-      queryFn: fetchStaff,
-    }),
-  };
-  const { data, isLoading, isError, refetch } = queries[scope];
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: hpQueryKeys.characters,
+    queryFn: fetchCharacters,
+  });
+
+  // students/staff = subset of /characters via hogwartsStudent/hogwartsStaff flags
+  const scoped = useMemo(() => {
+    const list = data ?? [];
+    if (scope === 'students') return list.filter((c) => c.hogwartsStudent);
+    if (scope === 'staff') return list.filter((c) => c.hogwartsStaff);
+    return list;
+  }, [data, scope]);
 
   const fuse = useMemo(
-    () => new Fuse(data ?? [], { keys: ['name'], threshold: 0.3 }),
-    [data],
+    () => new Fuse(scoped, { keys: ['name'], threshold: 0.3 }),
+    [scoped],
   );
 
   const searched = debouncedQuery
     ? fuse.search(debouncedQuery).map((r) => r.item)
-    : (data ?? []);
+    : scoped;
 
   const characters = searched.filter(
     (c) => house === 'All' || c.house === house,
@@ -123,14 +118,17 @@ function CharactersContent() {
         }}
       />
       <p className="mt-2 text-sm text-muted-foreground">
-        {data?.length ?? 0} {COUNT_LABEL[scope]}
+        {scoped.length} {COUNT_LABEL[scope]}
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2">
         {SCOPES.map((s) => (
           <button
             key={s.value}
-            onClick={() => setScope(s.value)}
+            onClick={() => {
+              setScope(s.value);
+              setPage(1);
+            }}
             className={cn(
               'rounded-full border px-3 py-1.5 text-sm transition-colors',
               scope === s.value
@@ -150,7 +148,10 @@ function CharactersContent() {
           <input
             type="search"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setPage(1);
+            }}
             placeholder="Search by name..."
             className="w-full rounded-lg border border-input bg-background py-2 pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           />
