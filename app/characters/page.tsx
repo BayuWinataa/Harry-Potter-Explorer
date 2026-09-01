@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import { fetchCharacters } from '@/services/hpApi';
 import { HOUSES, HOUSE_COLORS, hpQueryKeys } from '@/types/hp';
-import { CharacterCard, characterKey } from '@/components/character-card';
+import { CharacterCard } from '@/components/character-card';
 import { cn } from '@/lib/utils';
 
 const SCOPES = [
@@ -251,7 +251,7 @@ function CharactersContent() {
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {visible.map((c) => (
-              <CharacterCard key={characterKey(c)} character={c} />
+              <CharacterCard key={c.id} character={c} />
             ))}
           </motion.div>
         )}

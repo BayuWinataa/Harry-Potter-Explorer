@@ -5,18 +5,13 @@ import type { Character } from '@/types/hp';
 import { HOUSE_COLORS } from '@/types/hp';
 import { CharacterImage } from '@/components/character-image';
 
-// Prefer the stable API id; fall back to a name slug for legacy URLs.
-export function characterKey(c: Character) {
-  if (c.id) return c.id;
-  return c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-}
-
+// Stable API id is always present (all records have UUIDs).
 export function CharacterCard({ character }: { character: Character }) {
   const houseColor = character.house ? HOUSE_COLORS[character.house] : null;
 
   return (
     <Link
-      href={`/characters/${characterKey(character)}`}
+      href={`/characters/${character.id}`}
       className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card transition-[transform,border-color] duration-200 hover:scale-[1.02] hover:border-ring"
     >
       <CharacterImage
