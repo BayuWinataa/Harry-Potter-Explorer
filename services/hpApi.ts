@@ -30,11 +30,18 @@ export const fetchCharacters = async (): Promise<Character[]> => {
 };
 
 /**
- * Fetches a single character by ID (endpoint returns array of 1)
+ * Fetches a single character by ID (endpoint returns array of 1).
  */
 export const fetchCharacterById = async (id: string): Promise<Character[]> => {
-  const response = await api.get<Character[]>(`/character/${id}`);
-  return response.data;
+  try {
+    const response = await api.get<Character[]>(`/character/${id}`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return [];
+    }
+    throw error;
+  }
 };
 
 /**

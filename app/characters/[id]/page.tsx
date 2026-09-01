@@ -1,18 +1,21 @@
 import { cache } from 'react';
+import { unstable_cache } from 'next/cache';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { CharacterDetail } from '@/components/character-detail';
 import { fetchCharacterById } from '@/services/hpApi';
 import type { Character } from '@/types/hp';
 
+// Unstable_cache: characters change rarely, cache 1h to avoid hammering the
+// free-tier API on every request. Network/5xx errors still propagate to the
+// error boundary; only a missing character falls through to notFound().
 const getCharacter = cache(async (id: string): Promise<Character | null> => {
-  let characters: Awaited<ReturnType<typeof fetchCharacterById>>;
-  try {
-    characters = await fetchCharacterById(id);
-  } catch {
-    return null;
-  }
-  return characters[0] ?? null;
+  const [character] = await unstable_cache(
+    () => fetchCharacterById(id),
+    ['character', id],
+    { revalidate: 3600 },
+  )();
+  return character ?? null;
 });
 
 export async function generateMetadata({
