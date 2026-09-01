@@ -16,7 +16,7 @@ export function CharacterCard({ character }: { character: Character }) {
   return (
     <Link
       href={`/characters/${characterKey(character)}`}
-      className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-ring"
+      className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card transition-[transform,border-color] duration-200 hover:scale-[1.02] hover:border-ring"
     >
       <CharacterImage
         name={character.name}

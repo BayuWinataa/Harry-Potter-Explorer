@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 import Fuse from 'fuse.js';
+import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import { fetchCharacters } from '@/services/hpApi';
 import { HOUSES, HOUSE_COLORS, hpQueryKeys } from '@/types/hp';
@@ -116,11 +117,16 @@ export default function CharactersPage() {
         )}
 
         {!isLoading && !isError && characters.length > 0 && (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          >
             {characters.map((c) => (
               <CharacterCard key={characterKey(c)} character={c} />
             ))}
-          </div>
+          </motion.div>
         )}
       </section>
     </main>
