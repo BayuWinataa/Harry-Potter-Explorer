@@ -47,6 +47,13 @@ export default function CharactersPage() {
   return (
     <main className="container mx-auto px-4 py-10">
       <h1 className="font-display text-3xl font-bold">Characters</h1>
+      <div
+        className="mt-3 h-1 w-16 rounded-full"
+        style={{
+          backgroundColor:
+            house !== 'All' ? HOUSE_COLORS[house].bg : 'var(--primary)',
+        }}
+      />
       <p className="mt-2 text-sm text-muted-foreground">
         {data?.length ?? 0} wizards and witches from the wizarding world.
       </p>
