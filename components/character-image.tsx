@@ -20,7 +20,7 @@ export function CharacterImage({
   sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw',
 }: {
   name: string;
-  image?: string;
+  image?: string | null;
   className?: string;
   sizes?: string;
 }) {

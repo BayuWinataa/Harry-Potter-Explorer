@@ -1,37 +1,44 @@
-export interface Character {
-  id: string;
-  name: string;
-  alternate_names: string[];
-  species: string;
-  gender: string;
-  house: string;
-  dateOfBirth: string;
-  yearOfBirth: number;
-  wizard: boolean;
-  ancestry: string;
-  eyeColour: string;
-  hairColour: string;
-  wand: Wand;
-  patronus: string;
-  hogwartsStudent: boolean;
-  hogwartsStaff: boolean;
-  actor: string;
-  alternate_actors: string[];
-  alive: boolean;
-  image: string;
-}
+import { z } from 'zod';
 
-export interface Wand {
-  wood: string;
-  core: string;
-  length: number;
-}
+const WandSchema = z.object({
+  wood: z.string().nullish(),
+  core: z.string().nullish(),
+  length: z.number().nullish(),
+});
 
-export interface Spell {
-  id: string;
-  name: string;
-  description: string;
-}
+// Zod schemas double as runtime validation of the HP-API response shape and
+// as the source of the TypeScript types (z.infer). nullish() = null | undefined.
+export const CharacterSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  alternate_names: z.array(z.string()).default([]),
+  species: z.string().nullish(),
+  gender: z.string().nullish(),
+  house: z.string().nullish(),
+  dateOfBirth: z.string().nullish(),
+  yearOfBirth: z.number().nullish(),
+  wizard: z.boolean().nullish(),
+  ancestry: z.string().nullish(),
+  eyeColour: z.string().nullish(),
+  hairColour: z.string().nullish(),
+  wand: WandSchema.nullish(),
+  patronus: z.string().nullish(),
+  hogwartsStudent: z.boolean().nullish(),
+  hogwartsStaff: z.boolean().nullish(),
+  actor: z.string().nullish(),
+  alternate_actors: z.array(z.string()).default([]),
+  alive: z.boolean().nullish(),
+  image: z.string().nullish(),
+});
+
+export const SpellSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullish(),
+});
+
+export type Character = z.infer<typeof CharacterSchema>;
+export type Spell = z.infer<typeof SpellSchema>;
 
 export const HOUSES = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin'] as const;
 

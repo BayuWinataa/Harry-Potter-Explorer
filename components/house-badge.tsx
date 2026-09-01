@@ -1,6 +1,6 @@
 import { HOUSE_COLORS } from '@/types/hp';
 
-export function HouseBadge({ house }: { house?: string }) {
+export function HouseBadge({ house }: { house?: string | null }) {
   const color = house ? HOUSE_COLORS[house] : null;
   if (!color) {
     return (
