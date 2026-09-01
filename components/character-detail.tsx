@@ -24,6 +24,14 @@ export function CharacterDetail({
   const text = (v: string | number | null | undefined) =>
     v === null || v === undefined || v === '' ? undefined : String(v);
 
+  const wand = [
+    text(character.wand?.wood),
+    text(character.wand?.core),
+    character.wand?.length ? `${character.wand.length}"` : undefined,
+  ]
+    .filter(Boolean)
+    .join(', ');
+
   const details = [
     ['Actor', text(character.actor)],
     ['Species', text(character.species)],
@@ -34,7 +42,7 @@ export function CharacterDetail({
     ['Eye Colour', text(character.eyeColour)],
     ['Hair Colour', text(character.hairColour)],
     ['Patronus', text(character.patronus)],
-    ['Wand', [text(character.wand?.wood), text(character.wand?.core), character.wand?.length ? `${character.wand.length}"` : undefined].filter(Boolean).join(', ')],
+    ['Wand', wand],
     ['Status', character.alive == null ? undefined : character.alive ? 'Alive' : 'Deceased'],
     ['Role', [character.hogwartsStudent ? 'Student' : null, character.hogwartsStaff ? 'Staff' : null].filter(Boolean).join(', ')],
   ] as const;

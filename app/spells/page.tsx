@@ -1,4 +1,17 @@
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
+import type { Metadata } from "next";
 import { fetchSpells } from "@/services/hpApi";
+
+export const metadata: Metadata = { title: "Spells" };
+
+// Spells berubah jarang — cache 1h, sama seperti detail karakter.
+const getSpells = cache(async () => {
+  const spells = await unstable_cache(() => fetchSpells(), ["spells"], {
+    revalidate: 3600,
+  })();
+  return spells;
+});
 
 function spellHue(name: string) {
   let h = 5381;
@@ -7,7 +20,7 @@ function spellHue(name: string) {
 }
 
 export default async function SpellsPage() {
-  const spells = await fetchSpells();
+  const spells = await getSpells();
 
   return (
     <main className="container mx-auto px-4 pt-24 pb-10">

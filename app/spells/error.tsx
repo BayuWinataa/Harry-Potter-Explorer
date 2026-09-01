@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { ErrorCard } from '@/components/error-card';
 
 export default function SpellsError({
   error,
@@ -14,18 +15,9 @@ export default function SpellsError({
   }, [error]);
 
   return (
-    <main className="container mx-auto px-4 pt-24 pb-10">
-      <div className="flex flex-col items-center gap-4 rounded-lg border border-destructive/30 bg-destructive/10 px-6 py-10 text-center">
-        <p className="text-sm text-destructive">
-          Failed to load spells. Check your connection and try again.
-        </p>
-        <button
-          onClick={retry}
-          className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-muted"
-        >
-          Retry
-        </button>
-      </div>
-    </main>
+    <ErrorCard
+      message="Failed to load spells. Check your connection and try again."
+      retry={retry}
+    />
   );
 }
