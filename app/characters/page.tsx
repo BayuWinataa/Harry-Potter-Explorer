@@ -12,10 +12,12 @@ import { CharacterCard, characterKey } from '@/components/character-card';
 import { cn } from '@/lib/utils';
 
 const FILTERS = ['All', ...HOUSES] as const;
+const PAGE_SIZE = 24;
 
 export default function CharactersPage() {
   const [house, setHouse] = useState<(typeof FILTERS)[number]>('All');
   const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
   const [debouncedQuery] = useDebounce(query, 400);
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: hpQueryKeys.characters,
@@ -33,6 +35,13 @@ export default function CharactersPage() {
 
   const characters = searched.filter(
     (c) => house === 'All' || c.house === house,
+  );
+
+  const pageCount = Math.max(1, Math.ceil(characters.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const visible = characters.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
   );
 
   return (
@@ -123,10 +132,32 @@ export default function CharactersPage() {
             transition={{ duration: 0.3, ease: 'easeOut' }}
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
-            {characters.map((c) => (
+            {visible.map((c) => (
               <CharacterCard key={characterKey(c)} character={c} />
             ))}
           </motion.div>
+        )}
+
+        {!isLoading && !isError && pageCount > 1 && (
+          <div className="mt-8 flex items-center justify-center gap-2">
+            <button
+              onClick={() => setPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="rounded-lg border border-border px-3 py-1.5 text-sm disabled:pointer-events-none disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <span className="px-2 text-sm text-muted-foreground">
+              Page {currentPage} of {pageCount}
+            </span>
+            <button
+              onClick={() => setPage(Math.min(pageCount, currentPage + 1))}
+              disabled={currentPage === pageCount}
+              className="rounded-lg border border-border px-3 py-1.5 text-sm disabled:pointer-events-none disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
         )}
       </section>
     </main>
