@@ -1,10 +1,7 @@
-'use client';
-
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
-import { fetchCharacterById } from '@/services/hpApi';
-import { HOUSE_COLORS, hpQueryKeys } from '@/types/hp';
+import { HOUSE_COLORS } from '@/types/hp';
+import type { Character } from '@/types/hp';
 import { CharacterImage } from '@/components/character-image';
 
 function InfoRow({ label, value }: { label: string; value?: string }) {
@@ -17,50 +14,7 @@ function InfoRow({ label, value }: { label: string; value?: string }) {
   );
 }
 
-export function CharacterDetail({ id }: { id: string }) {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: hpQueryKeys.character(id),
-    queryFn: () => fetchCharacterById(id),
-  });
-
-  const character = data?.[0];
-
-  if (isLoading) {
-    return (
-      <main className="container mx-auto max-w-4xl px-4 pt-24 pb-10">
-        <div className="animate-pulse space-y-4">
-          <div className="h-4 w-24 rounded bg-muted" />
-          <div className="flex flex-col gap-6 sm:flex-row">
-            <div className="aspect-square w-full max-w-xs rounded-lg bg-muted" />
-            <div className="flex-1 space-y-3">
-              <div className="h-8 w-1/2 rounded bg-muted" />
-              <div className="h-4 w-full rounded bg-muted" />
-              <div className="h-4 w-2/3 rounded bg-muted" />
-            </div>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  if (isError || !character) {
-    return (
-      <main className="container mx-auto max-w-4xl px-4 pt-24 pb-10">
-        <div className="flex flex-col items-center gap-4 rounded-lg border border-border px-6 py-10 text-center">
-          <p className="text-sm text-muted-foreground">
-            Character not found or could not be loaded.
-          </p>
-          <Link
-            href="/characters"
-            className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-muted"
-          >
-            Back to Characters
-          </Link>
-        </div>
-      </main>
-    );
-  }
-
+export function CharacterDetail({ character }: { character: Character }) {
   const houseColor = character.house ? HOUSE_COLORS[character.house] : null;
   const text = (v: string | number | null | undefined) =>
     v === null || v === undefined || v === '' ? undefined : String(v);
