@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+DEVELOPMENT_GUIDE.md
+Harry Potter Explorer FE Assignment.pdf
