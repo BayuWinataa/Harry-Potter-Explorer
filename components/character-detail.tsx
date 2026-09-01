@@ -3,10 +3,9 @@
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
-import { fetchCharacters } from '@/services/hpApi';
+import { fetchCharacterById } from '@/services/hpApi';
 import { HOUSE_COLORS, hpQueryKeys } from '@/types/hp';
 import { CharacterImage } from '@/components/character-image';
-import { characterKey } from '@/components/character-card';
 
 function InfoRow({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
@@ -20,11 +19,11 @@ function InfoRow({ label, value }: { label: string; value?: string }) {
 
 export function CharacterDetail({ id }: { id: string }) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: hpQueryKeys.characters,
-    queryFn: fetchCharacters,
+    queryKey: hpQueryKeys.character(id),
+    queryFn: () => fetchCharacterById(id),
   });
 
-  const character = (data ?? []).find((c) => c.id === id || characterKey(c) === id);
+  const character = data?.[0];
 
   if (isLoading) {
     return (
