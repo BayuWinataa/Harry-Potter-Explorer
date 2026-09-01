@@ -1,13 +1,20 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ScrollText, Wand2 } from 'lucide-react';
-import { HOUSES, HOUSE_COLORS } from '@/types/hp';
+import { HOUSES } from '@/types/hp';
 
 const HOUSE_TRAITS: Record<string, string> = {
   Gryffindor: 'Courage, daring, nerve, and chivalry.',
   Hufflepuff: 'Hard work, patience, loyalty, and fair play.',
   Ravenclaw: 'Intelligence, wisdom, wit, and learning.',
   Slytherin: 'Ambition, cunning, leadership, and resourcefulness.',
+};
+
+const HOUSE_CREST: Record<string, string> = {
+  Gryffindor: '/houses/gryffindor.svg',
+  Hufflepuff: '/houses/hufflepuff.svg',
+  Ravenclaw: '/houses/ravenclaw.svg',
+  Slytherin: '/houses/slytherin.svg',
 };
 
 export default function Home() {
@@ -38,17 +45,21 @@ export default function Home() {
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {HOUSES.map((house) => {
-              const colors = HOUSE_COLORS[house];
               return (
                 <Link
                   key={house}
                   href={`/characters?house=${house}`}
-                  className="flex flex-col gap-2.5 rounded-lg border border-border bg-card p-5 transition-[transform,border-color] duration-200 hover:scale-[1.02] hover:border-ring"
+                  className="group flex flex-col items-center gap-3 rounded-lg border border-border bg-card p-6 text-center transition-[transform,border-color] duration-200 hover:scale-[1.01] hover:border-ring"
                 >
-                  <div
-                    className="h-1 w-10 rounded-full"
-                    style={{ backgroundColor: colors.bg }}
-                  />
+                  <div className="flex h-24 w-24 items-center justify-center overflow-hidden">
+                    <Image
+                      src={HOUSE_CREST[house]}
+                      alt={`${house} crest`}
+                      width={72}
+                      height={72}
+                      className="h-16 w-16 object-contain"
+                    />
+                  </div>
                   <span className="font-display text-xl font-bold">
                     {house}
                   </span>
