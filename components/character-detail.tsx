@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { HOUSE_COLORS } from '@/types/hp';
 import type { Character } from '@/types/hp';
 import { CharacterImage } from '@/components/character-image';
+import { HouseBadge } from '@/components/house-badge';
 
 function InfoRow({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
@@ -15,7 +15,6 @@ function InfoRow({ label, value }: { label: string; value?: string }) {
 }
 
 export function CharacterDetail({ character }: { character: Character }) {
-  const houseColor = character.house ? HOUSE_COLORS[character.house] : null;
   const text = (v: string | number | null | undefined) =>
     v === null || v === undefined || v === '' ? undefined : String(v);
 
@@ -55,14 +54,7 @@ export function CharacterDetail({ character }: { character: Character }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="font-display text-3xl font-bold">{character.name}</h1>
-            {houseColor && (
-              <span
-                className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
-                style={{ backgroundColor: houseColor.bg, color: houseColor.color }}
-              >
-                {character.house}
-              </span>
-            )}
+            <HouseBadge house={character.house} />
           </div>
 
           <dl className="mt-4 divide-y divide-border border-y border-border">
