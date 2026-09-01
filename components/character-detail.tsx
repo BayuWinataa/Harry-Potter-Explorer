@@ -14,7 +14,13 @@ function InfoRow({ label, value }: { label: string; value?: string }) {
   );
 }
 
-export function CharacterDetail({ character }: { character: Character }) {
+export function CharacterDetail({
+  character,
+  backHref = '/characters',
+}: {
+  character: Character;
+  backHref?: string;
+}) {
   const text = (v: string | number | null | undefined) =>
     v === null || v === undefined || v === '' ? undefined : String(v);
 
@@ -36,7 +42,7 @@ export function CharacterDetail({ character }: { character: Character }) {
   return (
     <main className="container mx-auto max-w-4xl px-4 pt-24 pb-10">
       <Link
-        href="/characters"
+        href={backHref}
         className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
       >
         <ArrowLeft className="size-4" />

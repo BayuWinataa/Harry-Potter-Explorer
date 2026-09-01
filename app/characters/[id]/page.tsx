@@ -38,12 +38,18 @@ export async function generateMetadata({
 
 export default async function CharacterPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ house?: string }>;
 }) {
   const { id } = await params;
+  const { house } = await searchParams;
   const character = await getCharacter(id);
   if (!character) notFound();
 
-  return <CharacterDetail character={character} />;
+  // Back bawa filter house yang dipakai saat datang dari /characters?house=X.
+  const backHref = house ? `/characters?house=${house}` : '/characters';
+
+  return <CharacterDetail character={character} backHref={backHref} />;
 }

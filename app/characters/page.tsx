@@ -176,7 +176,7 @@ function CharactersContent() {
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {visible.map((c) => (
-              <CharacterCard key={c.id} character={c} />
+              <CharacterCard key={c.id} character={c} house={house} />
             ))}
           </motion.div>
         )}
