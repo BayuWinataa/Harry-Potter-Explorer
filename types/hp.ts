@@ -45,6 +45,8 @@ export const HOUSE_COLORS: Record<string, { color: string; bg: string }> = {
 // Query Keys for TanStack Query
 export const hpQueryKeys = {
   characters: ['characters'] as const,
+  students: ['characters', 'students'] as const,
+  staff: ['characters', 'staff'] as const,
   character: (id: string) => ['characters', id] as const,
   spells: ['spells'] as const,
 } as const;

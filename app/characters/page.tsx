@@ -6,23 +6,54 @@ import { useDebounce } from 'use-debounce';
 import Fuse from 'fuse.js';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
-import { fetchCharacters } from '@/services/hpApi';
+import {
+  fetchCharacters,
+  fetchStaff,
+  fetchStudents,
+} from '@/services/hpApi';
 import { HOUSES, HOUSE_COLORS, hpQueryKeys } from '@/types/hp';
 import { CharacterCard, characterKey } from '@/components/character-card';
 import { cn } from '@/lib/utils';
+
+const SCOPES = [
+  { value: 'all', label: 'All' },
+  { value: 'students', label: 'Students' },
+  { value: 'staff', label: 'Staff' },
+] as const;
+
+type Scope = (typeof SCOPES)[number]['value'];
+
+const COUNT_LABEL: Record<Scope, string> = {
+  all: 'wizards and witches from the wizarding world.',
+  students: 'Hogwarts students.',
+  staff: 'Hogwarts staff members.',
+};
 
 const FILTERS = ['All', ...HOUSES] as const;
 const PAGE_SIZE = 24;
 
 export default function CharactersPage() {
+  const [scope, setScope] = useState<Scope>('all');
   const [house, setHouse] = useState<(typeof FILTERS)[number]>('All');
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [debouncedQuery] = useDebounce(query, 400);
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: hpQueryKeys.characters,
-    queryFn: fetchCharacters,
-  });
+
+  const queries = {
+    all: useQuery({
+      queryKey: hpQueryKeys.characters,
+      queryFn: fetchCharacters,
+    }),
+    students: useQuery({
+      queryKey: hpQueryKeys.students,
+      queryFn: fetchStudents,
+    }),
+    staff: useQuery({
+      queryKey: hpQueryKeys.staff,
+      queryFn: fetchStaff,
+    }),
+  };
+  const { data, isLoading, isError, refetch } = queries[scope];
 
   const fuse = useMemo(
     () => new Fuse(data ?? [], { keys: ['name'], threshold: 0.3 }),
@@ -55,8 +86,26 @@ export default function CharactersPage() {
         }}
       />
       <p className="mt-2 text-sm text-muted-foreground">
-        {data?.length ?? 0} wizards and witches from the wizarding world.
+        {data?.length ?? 0} {COUNT_LABEL[scope]}
       </p>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        {SCOPES.map((s) => (
+          <button
+            key={s.value}
+            onClick={() => setScope(s.value)}
+            className={cn(
+              'rounded-full border px-3 py-1.5 text-sm transition-colors',
+              scope === s.value
+                ? 'border-transparent bg-primary font-medium text-primary-foreground'
+                : 'border-border text-muted-foreground hover:bg-muted',
+            )}
+            aria-pressed={scope === s.value}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
 
       <div className="mt-6 max-w-sm">
         <div className="relative">
