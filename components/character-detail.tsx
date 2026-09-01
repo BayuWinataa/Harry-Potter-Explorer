@@ -48,6 +48,7 @@ export function CharacterDetail({ character }: { character: Character }) {
         <CharacterImage
           name={character.name}
           image={character.image}
+          sizes="(max-width: 640px) 100vw, 320px"
           className="aspect-square w-full max-w-xs shrink-0 overflow-hidden rounded-lg border border-border"
         />
 

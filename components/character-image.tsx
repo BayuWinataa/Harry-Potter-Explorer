@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element -- external flaky images from HP-API need onError fallback */
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -17,10 +17,12 @@ export function CharacterImage({
   name,
   image,
   className,
+  sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw',
 }: {
   name: string;
   image?: string;
   className?: string;
+  sizes?: string;
 }) {
   const [imgError, setImgError] = useState(false);
   const showImage = image && !imgError;
@@ -28,11 +30,11 @@ export function CharacterImage({
   return (
     <div className={cn('relative bg-muted', className)}>
       {showImage ? (
-        <img
+        <Image
           src={image}
           alt={name}
-          loading="lazy"
-          decoding="async"
+          fill
+          sizes={sizes}
           className="h-full w-full object-cover"
           onError={() => setImgError(true)}
         />
