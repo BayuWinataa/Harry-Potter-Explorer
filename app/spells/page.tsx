@@ -12,7 +12,7 @@ export default function SpellsPage() {
   });
 
   return (
-    <main className="container mx-auto px-4 py-10">
+    <main className="container mx-auto px-4 pt-24 pb-10">
       <h1 className="font-display text-3xl font-bold">Spells</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         {data?.length ?? 0} incantations from the wizarding world.

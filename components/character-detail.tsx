@@ -28,7 +28,7 @@ export function CharacterDetail({ id }: { id: string }) {
 
   if (isLoading) {
     return (
-      <main className="container mx-auto max-w-4xl px-4 py-10">
+      <main className="container mx-auto max-w-4xl px-4 pt-24 pb-10">
         <div className="animate-pulse space-y-4">
           <div className="h-4 w-24 rounded bg-muted" />
           <div className="flex flex-col gap-6 sm:flex-row">
@@ -46,7 +46,7 @@ export function CharacterDetail({ id }: { id: string }) {
 
   if (isError || !character) {
     return (
-      <main className="container mx-auto max-w-4xl px-4 py-10">
+      <main className="container mx-auto max-w-4xl px-4 pt-24 pb-10">
         <div className="flex flex-col items-center gap-4 rounded-lg border border-border px-6 py-10 text-center">
           <p className="text-sm text-muted-foreground">
             Character not found or could not be loaded.
@@ -82,7 +82,7 @@ export function CharacterDetail({ id }: { id: string }) {
   ] as const;
 
   return (
-    <main className="container mx-auto max-w-4xl px-4 py-10">
+    <main className="container mx-auto max-w-4xl px-4 pt-24 pb-10">
       <Link
         href="/characters"
         className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"

@@ -1,18 +1,12 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, Geist, Geist_Mono, Poppins } from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 import { Navbar } from '@/components/navbar';
 import { Providers } from './providers';
 import './globals.css';
 
-const poppins = Poppins({
-	subsets: ['latin'],
-	weight: ['400', '500', '600', '700'],
-	variable: '--font-poppins',
-});
-
-const cormorant = Cormorant_Garamond({
-	subsets: ['latin'],
-	weight: ['600', '700'],
+const harryPotter = localFont({
+	src: './fonts/harry-potter.woff',
 	variable: '--font-display',
 });
 
@@ -33,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className={`${poppins.variable} ${cormorant.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}>
+		<html lang="en" className={`${harryPotter.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}>
 			<body className="min-h-full flex flex-col">
 				<Navbar />
 				<Providers>{children}</Providers>

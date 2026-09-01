@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 import Fuse from 'fuse.js';
@@ -41,9 +42,17 @@ const SORT_OPTIONS = [
 
 type SortBy = (typeof SORT_OPTIONS)[number]['value'];
 
-export default function CharactersPage() {
+function CharactersContent() {
   const [scope, setScope] = useState<Scope>('all');
-  const [house, setHouse] = useState<(typeof FILTERS)[number]>('All');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const houseParam = searchParams.get('house');
+  const house: (typeof FILTERS)[number] =
+    houseParam && HOUSES.includes(houseParam as (typeof HOUSES)[number])
+      ? (houseParam as (typeof FILTERS)[number])
+      : 'All';
+  const setHouse = (h: (typeof FILTERS)[number]) =>
+    router.push(h === 'All' ? '/characters' : `/characters?house=${h}`);
   const [sortBy, setSortBy] = useState<SortBy>('name-asc');
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
@@ -104,7 +113,7 @@ export default function CharactersPage() {
   );
 
   return (
-    <main className="container mx-auto px-4 py-10">
+    <main className="container mx-auto px-4 pt-24 pb-10">
       <h1 className="font-display text-3xl font-bold">Characters</h1>
       <div
         className="mt-3 h-1 w-16 rounded-full"
@@ -262,5 +271,19 @@ export default function CharactersPage() {
         )}
       </section>
     </main>
+  );
+}
+
+export default function CharactersPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="container mx-auto px-4 pt-24 pb-10">
+          <div className="h-8 w-40 animate-pulse rounded bg-muted" />
+        </main>
+      }
+    >
+      <CharactersContent />
+    </Suspense>
   );
 }
