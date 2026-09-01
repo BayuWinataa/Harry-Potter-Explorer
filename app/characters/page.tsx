@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import { CharacterCard } from "@/components/character-card";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   useCharacterFilters,
   SCOPES,
@@ -75,7 +77,7 @@ function CharactersContent() {
       <div className="mt-6 max-w-sm">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <input
+          <Input
             type="search"
             value={query}
             aria-label="Search characters by name"
@@ -84,7 +86,7 @@ function CharactersContent() {
               setPage(1);
             }}
             placeholder="Search by name..."
-            className="w-full rounded-lg border border-input bg-background py-2 pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="pl-9"
           />
         </div>
       </div>
@@ -139,10 +141,7 @@ function CharactersContent() {
         {isLoading && (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-3/4 animate-pulse rounded-lg border border-border bg-muted"
-              />
+              <Skeleton key={i} className="aspect-3/4 rounded-lg" />
             ))}
           </div>
         )}
@@ -214,7 +213,7 @@ export default function CharactersPage() {
       <Suspense
         fallback={
           <main className="container mx-auto px-4 pt-24 pb-10">
-            <div className="h-8 w-40 animate-pulse rounded bg-muted" />
+            <Skeleton className="h-8 w-40 rounded-md" />
           </main>
         }
       >
