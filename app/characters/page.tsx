@@ -1,7 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useDebounce } from 'use-debounce';
+import Fuse from 'fuse.js';
+import { Search } from 'lucide-react';
 import { fetchCharacters } from '@/services/hpApi';
 import { HOUSES, HOUSE_COLORS, hpQueryKeys } from '@/types/hp';
 import { CharacterCard, characterKey } from '@/components/character-card';
@@ -11,12 +14,23 @@ const FILTERS = ['All', ...HOUSES] as const;
 
 export default function CharactersPage() {
   const [house, setHouse] = useState<(typeof FILTERS)[number]>('All');
+  const [query, setQuery] = useState('');
+  const [debouncedQuery] = useDebounce(query, 400);
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: hpQueryKeys.characters,
     queryFn: fetchCharacters,
   });
 
-  const characters = (data ?? []).filter(
+  const fuse = useMemo(
+    () => new Fuse(data ?? [], { keys: ['name'], threshold: 0.3 }),
+    [data],
+  );
+
+  const searched = debouncedQuery
+    ? fuse.search(debouncedQuery).map((r) => r.item)
+    : (data ?? []);
+
+  const characters = searched.filter(
     (c) => house === 'All' || c.house === house,
   );
 
@@ -26,6 +40,19 @@ export default function CharactersPage() {
       <p className="mt-2 text-sm text-muted-foreground">
         {data?.length ?? 0} wizards and witches from the wizarding world.
       </p>
+
+      <div className="mt-6 max-w-sm">
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by name..."
+            className="w-full rounded-lg border border-input bg-background py-2 pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          />
+        </div>
+      </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
         {FILTERS.map((h) => {
@@ -82,7 +109,9 @@ export default function CharactersPage() {
 
         {!isLoading && !isError && characters.length === 0 && (
           <p className="py-10 text-center text-sm text-muted-foreground">
-            No characters found in {house}.
+            {debouncedQuery
+              ? `No characters match "${debouncedQuery}".`
+              : `No characters found in ${house}.`}
           </p>
         )}
 
