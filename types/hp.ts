@@ -35,7 +35,6 @@ export interface Spell {
 
 export const HOUSES = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin'] as const;
 
-// House colors for badges/filters — light text on dark bg, per DESIGN_GUIDE.md §4
 export const HOUSE_COLORS: Record<string, { color: string; bg: string }> = {
   Gryffindor: { color: '#d3a625', bg: '#740001' },
   Slytherin: { color: '#c0c0c0', bg: '#1a472a' },
