@@ -1,5 +1,9 @@
-import { Sparkles } from 'lucide-react';
 import { fetchSpells } from '@/services/hpApi';
+
+// Warna "cahaya mantra" deterministik per nama.
+function hue(name: string) {
+  return [...name].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 0);
+}
 
 export default async function SpellsPage() {
   const spells = await fetchSpells();
@@ -23,16 +27,25 @@ export default async function SpellsPage() {
             {spells.map((spell) => (
               <div
                 key={spell.id}
-                className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4 transition-colors hover:border-ring"
+                className="group relative overflow-hidden rounded-lg border border-border bg-card p-5 transition-colors hover:border-ring"
               >
-                <div className="flex items-center gap-2">
-                  <Sparkles className="size-4 shrink-0 text-primary" />
-                  <span className="font-display text-lg font-semibold leading-snug">
-                    {spell.name}
-                  </span>
-                </div>
+                {/* glow: warna cahaya mantra */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background: `radial-gradient(120px at 30% 0%, hsl(${hue(spell.name)} 70% 60% / 0.30), transparent 70%)`,
+                  }}
+                />
+                <span className="relative font-display text-2xl leading-none">
+                  {spell.name}
+                </span>
+                <div
+                  className="relative mt-2 h-px w-10"
+                  style={{ background: `hsl(${hue(spell.name)} 70% 60%)` }}
+                />
                 {spell.description && (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="relative mt-3 text-sm text-muted-foreground">
                     {spell.description}
                   </p>
                 )}
