@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
+import { ReactLenis } from 'lenis/react';
 import { Navbar } from '@/components/navbar';
 import './globals.css';
 
@@ -32,8 +33,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang="en" className={`${harryPotter.variable} ${sofiaSans.variable} ${geistMono.variable} h-full antialiased dark`}>
 			<body className="min-h-full flex flex-col">
-				<Navbar />
-				{children}
+				<ReactLenis root options={{ autoRaf: true }}>
+					<Navbar />
+					{children}
+				</ReactLenis>
 			</body>
 		</html>
 	);
