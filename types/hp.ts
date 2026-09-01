@@ -33,13 +33,15 @@ export interface Spell {
   description: string;
 }
 
-export interface Spell {
-  id: string;
-  name: string;
-  description: string;
-}
-
 export const HOUSES = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin'] as const;
+
+// House colors for badges/filters — light text on dark bg, per DESIGN_GUIDE.md §4
+export const HOUSE_COLORS: Record<string, { color: string; bg: string }> = {
+  Gryffindor: { color: '#d3a625', bg: '#740001' },
+  Slytherin: { color: '#c0c0c0', bg: '#1a472a' },
+  Ravenclaw: { color: '#946b2d', bg: '#0e1a40' },
+  Hufflepuff: { color: '#ecb939', bg: '#372e29' },
+};
 
 // Query Keys for TanStack Query
 export const hpQueryKeys = {

@@ -1,0 +1,99 @@
+'use client';
+
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { fetchCharacters } from '@/services/hpApi';
+import { HOUSES, HOUSE_COLORS, hpQueryKeys } from '@/types/hp';
+import { CharacterCard, characterKey } from '@/components/character-card';
+import { cn } from '@/lib/utils';
+
+const FILTERS = ['All', ...HOUSES] as const;
+
+export default function CharactersPage() {
+  const [house, setHouse] = useState<(typeof FILTERS)[number]>('All');
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: hpQueryKeys.characters,
+    queryFn: fetchCharacters,
+  });
+
+  const characters = (data ?? []).filter(
+    (c) => house === 'All' || c.house === house,
+  );
+
+  return (
+    <main className="container mx-auto px-4 py-10">
+      <h1 className="font-display text-3xl font-bold">Characters</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        {data?.length ?? 0} wizards and witches from the wizarding world.
+      </p>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        {FILTERS.map((h) => {
+          const active = house === h;
+          const color = h !== 'All' ? HOUSE_COLORS[h] : null;
+          return (
+            <button
+              key={h}
+              onClick={() => setHouse(h)}
+              className={cn(
+                'rounded-full border px-3 py-1.5 text-sm transition-colors',
+                active
+                  ? 'border-transparent font-medium'
+                  : 'border-border text-muted-foreground hover:bg-muted',
+              )}
+              style={
+                active && color
+                  ? { backgroundColor: color.bg, color: color.color }
+                  : undefined
+              }
+              aria-pressed={active}
+            >
+              {h}
+            </button>
+          );
+        })}
+      </div>
+
+      <section className="mt-8">
+        {isLoading && (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className="aspect-[3/4] animate-pulse rounded-lg border border-border bg-muted"
+              />
+            ))}
+          </div>
+        )}
+
+        {isError && (
+          <div className="flex flex-col items-center gap-4 rounded-lg border border-destructive/30 bg-destructive/10 px-6 py-10 text-center">
+            <p className="text-sm text-destructive">
+              Failed to load characters. Check your connection and try again.
+            </p>
+            <button
+              onClick={() => refetch()}
+              className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-muted"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
+        {!isLoading && !isError && characters.length === 0 && (
+          <p className="py-10 text-center text-sm text-muted-foreground">
+            No characters found in {house}.
+          </p>
+        )}
+
+        {!isLoading && !isError && characters.length > 0 && (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {characters.map((c) => (
+              <CharacterCard key={characterKey(c)} character={c} />
+            ))}
+          </div>
+        )}
+      </section>
+    </main>
+  );
+}
