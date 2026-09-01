@@ -5,9 +5,10 @@ import type { Character } from '@/types/hp';
 import { HOUSE_COLORS } from '@/types/hp';
 import { CharacterImage } from '@/components/character-image';
 
-// Character id can be "" in HP-API records — fallback key from name for routing
+// Prefer the stable API id; fall back to a name slug for legacy URLs.
 export function characterKey(c: Character) {
-  return c.id || c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  if (c.id) return c.id;
+  return c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
 export function CharacterCard({ character }: { character: Character }) {

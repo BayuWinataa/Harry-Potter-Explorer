@@ -74,12 +74,18 @@ function CharactersContent() {
     [scoped],
   );
 
-  const searched = debouncedQuery
-    ? fuse.search(debouncedQuery).map((r) => r.item)
-    : scoped;
+  const searched = useMemo(
+    () =>
+      debouncedQuery
+        ? fuse.search(debouncedQuery).map((r) => r.item)
+        : scoped,
+    [fuse, debouncedQuery, scoped],
+  );
 
-  const characters = searched.filter(
-    (c) => house === 'All' || c.house === house,
+  const characters = useMemo(
+    () =>
+      searched.filter((c) => house === 'All' || c.house === house),
+    [searched, house],
   );
 
   const sorted = useMemo(() => {
@@ -148,6 +154,7 @@ function CharactersContent() {
           <input
             type="search"
             value={query}
+            aria-label="Search characters by name"
             onChange={(e) => {
               setQuery(e.target.value);
               setPage(1);
