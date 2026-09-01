@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
 import { Navbar } from '@/components/navbar';
 import './globals.css';
@@ -9,9 +9,10 @@ const harryPotter = localFont({
 	variable: '--font-display',
 });
 
-const geistSans = Geist({
-	variable: '--font-geist-sans',
-	subsets: ['latin'],
+// Sofia Sans (Fontshare, self-hosted) — variable font for body text
+const sofiaSans = localFont({
+	src: './fonts/sofia-sans.woff2',
+	variable: '--font-sans',
 });
 
 const geistMono = Geist_Mono({
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className={`${harryPotter.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}>
+		<html lang="en" className={`${harryPotter.variable} ${sofiaSans.variable} ${geistMono.variable} h-full antialiased dark`}>
 			<body className="min-h-full flex flex-col">
 				<Navbar />
 				{children}

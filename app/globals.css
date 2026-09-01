@@ -7,7 +7,6 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-poppins: var(--font-poppins);
   --font-display: var(--font-display);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
@@ -127,6 +126,6 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-poppins;
+    @apply font-sans;
   }
 }
