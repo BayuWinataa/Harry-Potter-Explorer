@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { SectionHeading } from '@/components/home/section-heading';
+import { ExploreRow } from '@/components/home/explore-row';
 import { HOUSES } from '@/types/hp';
 
 const HOUSE_TRAITS: Record<string, string> = {
@@ -40,10 +40,7 @@ export default function Home() {
 
       <div className="container mx-auto px-4">
         <section className="py-10">
-          <div className="flex items-center gap-3">
-            <h2 className="font-display text-2xl font-bold">Browse by House</h2>
-            <div className="h-px flex-1 bg-border" />
-          </div>
+          <SectionHeading>Browse by House</SectionHeading>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {HOUSES.map((house) => {
               return (
@@ -75,73 +72,34 @@ export default function Home() {
 
         <section className="relative overflow-hidden py-16 sm:py-20">
           <div className="container mx-auto px-4">
-            <div className="flex items-center gap-3">
-              <h2 className="font-display text-2xl font-bold">Start Exploring</h2>
-              <div className="h-px flex-1 bg-border/60" />
-            </div>
+            <SectionHeading>Start Exploring</SectionHeading>
 
-            <div className="mt-10 grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-              <div className="relative mx-auto w-full max-w-sm">
-                <div className="relative overflow-hidden">
-                  <Image
-                    src="/charakter.webp"
-                    alt="A witch from the wizarding world"
-                    width={359}
-                    height={401}
-                    className="w-full object-cover"
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col items-center gap-4 text-center lg:items-start lg:text-left">
-                <h3 className="font-display text-3xl font-bold sm:text-4xl">
-                  Meet the characters
-                </h3>
-                <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
-                  Explore every wizard, witch, and creature in the HP-API.
-                  Search by name, filter by house, and visit each character&apos;s
-                  full profile.
-                </p>
-                <div className="mt-2 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-                  <Link
-                    href="/characters"
-                    className={cn(buttonVariants({ size: 'lg' }), 'gap-2')}
-                  >
-                    Browse Characters
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <ExploreRow
+              image={{
+                src: '/charakter.webp',
+                alt: 'A witch from the wizarding world',
+                width: 359,
+                height: 401,
+              }}
+              title="Meet the characters"
+              copy="Explore every wizard, witch, and creature in the HP-API. Search by name, filter by house, and visit each character's full profile."
+              href="/characters"
+              cta="Browse Characters"
+            />
 
-            <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-              <div className="flex flex-col items-center gap-4 text-center lg:items-start lg:text-left lg:order-first">
-                <h3 className="font-display text-3xl font-bold sm:text-4xl">
-                  Learn the spells
-                </h3>
-                <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
-                  Study every incantation — from Lumos to Expelliarmus — with
-                  their descriptions, straight from the HP-API.
-                </p>
-                <div className="mt-2 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-                  <Link
-                    href="/spells"
-                    className={cn(buttonVariants({ size: 'lg' }), 'gap-4')}
-                  >
-                    Browse Spells
-                  </Link>
-                </div>
-              </div>
-              <div className="relative mx-auto w-full max-w-sm lg:order-last">
-                <div className="relative overflow-hidden">
-                  <Image
-                    src="/spelll.webp"
-                    alt="A magic spell in the wizarding world"
-                    width={334}
-                    height={596}
-                    className="w-full object-cover"
-                  />
-                </div>
-              </div>
-            </div>
+            <ExploreRow
+              reverse
+              image={{
+                src: '/spelll.webp',
+                alt: 'A magic spell in the wizarding world',
+                width: 334,
+                height: 596,
+              }}
+              title="Learn the spells"
+              copy="Study every incantation — from Lumos to Expelliarmus — with their descriptions, straight from the HP-API."
+              href="/spells"
+              cta="Browse Spells"
+            />
           </div>
         </section>
       </div>
