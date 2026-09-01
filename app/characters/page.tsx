@@ -11,6 +11,7 @@ import { fetchCharacters } from '@/services/hpApi';
 import { HOUSES, HOUSE_COLORS, hpQueryKeys } from '@/types/hp';
 import { CharacterCard } from '@/components/character-card';
 import { cn } from '@/lib/utils';
+import { Providers } from '@/app/providers';
 
 const SCOPES = [
   { value: 'all', label: 'All' },
@@ -284,14 +285,16 @@ function CharactersContent() {
 
 export default function CharactersPage() {
   return (
-    <Suspense
-      fallback={
-        <main className="container mx-auto px-4 pt-24 pb-10">
-          <div className="h-8 w-40 animate-pulse rounded bg-muted" />
-        </main>
-      }
-    >
-      <CharactersContent />
-    </Suspense>
+    <Providers>
+      <Suspense
+        fallback={
+          <main className="container mx-auto px-4 pt-24 pb-10">
+            <div className="h-8 w-40 animate-pulse rounded bg-muted" />
+          </main>
+        }
+      >
+        <CharactersContent />
+      </Suspense>
+    </Providers>
   );
 }
