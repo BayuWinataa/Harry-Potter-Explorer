@@ -34,9 +34,9 @@ function CharactersContent() {
     scoped,
     characters,
     visible,
-    pageCount,
-    currentPage,
-    setPage,
+    hasMore,
+    loadMore,
+    resetList,
   } = useCharacterFilters();
 
   return (
@@ -59,7 +59,7 @@ function CharactersContent() {
             key={s.value}
             onClick={() => {
               setScope(s.value);
-              setPage(1);
+              resetList();
             }}
             className={cn(
               "rounded-full border px-3 py-1.5 text-sm transition-colors",
@@ -83,7 +83,7 @@ function CharactersContent() {
             aria-label="Search characters by name"
             onChange={(e) => {
               setQuery(e.target.value);
-              setPage(1);
+              resetList();
             }}
             placeholder="Search by name..."
             className="pl-9"
@@ -181,24 +181,13 @@ function CharactersContent() {
           </motion.div>
         )}
 
-        {!isLoading && !isError && pageCount > 1 && (
-          <div className="mt-8 flex items-center justify-center gap-2">
+        {!isLoading && !isError && hasMore && (
+          <div className="mt-8 flex justify-center">
             <button
-              onClick={() => setPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className="rounded-lg border border-border px-3 py-1.5 text-sm disabled:pointer-events-none disabled:opacity-50"
+              onClick={loadMore}
+              className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
             >
-              Previous
-            </button>
-            <span className="px-2 text-sm text-muted-foreground">
-              Page {currentPage} of {pageCount}
-            </span>
-            <button
-              onClick={() => setPage(Math.min(pageCount, currentPage + 1))}
-              disabled={currentPage === pageCount}
-              className="rounded-lg border border-border px-3 py-1.5 text-sm disabled:pointer-events-none disabled:opacity-50"
-            >
-              Next
+              Load more
             </button>
           </div>
         )}

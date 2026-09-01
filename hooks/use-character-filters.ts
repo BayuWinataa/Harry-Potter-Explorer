@@ -23,7 +23,7 @@ export const COUNT_LABEL: Record<Scope, string> = {
 };
 
 export const FILTERS = ['All', ...HOUSES] as const;
-const PAGE_SIZE = 24;
+export const PAGE_SIZE = 24;
 
 export const SORT_OPTIONS = [
   { value: 'name-asc', label: 'Name A–Z' },
@@ -44,12 +44,12 @@ export function useCharacterFilters() {
       ? (houseParam as (typeof FILTERS)[number])
       : 'All';
   const setHouse = (h: (typeof FILTERS)[number]) => {
-    setPage(1);
+    setVisibleCount(PAGE_SIZE);
     router.push(h === 'All' ? '/characters' : `/characters?house=${h}`);
   };
   const [sortBy, setSortBy] = useState<SortBy>('name-asc');
   const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [debouncedQuery] = useDebounce(query, 400);
 
   const { data, isLoading, isError, refetch } = useQuery({
@@ -102,12 +102,12 @@ export function useCharacterFilters() {
     }
   }, [characters, sortBy]);
 
-  const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
-  const currentPage = Math.min(page, pageCount);
-  const visible = sorted.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
-  );
+  // Client-side pagination: all data is in memory (single fetch), so "load
+  // more" just reveals the next slice instead of hitting the API again.
+  const visible = sorted.slice(0, visibleCount);
+  const hasMore = visibleCount < sorted.length;
+  const loadMore = () => setVisibleCount((c) => c + PAGE_SIZE);
+  const resetList = () => setVisibleCount(PAGE_SIZE);
 
   return {
     scope,
@@ -125,8 +125,8 @@ export function useCharacterFilters() {
     scoped,
     characters,
     visible,
-    pageCount,
-    currentPage,
-    setPage,
+    hasMore,
+    loadMore,
+    resetList,
   };
 }
