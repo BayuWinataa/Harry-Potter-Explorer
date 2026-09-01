@@ -29,7 +29,7 @@ export function CharacterDetail({ character }: { character: Character }) {
     ['Hair Colour', text(character.hairColour)],
     ['Patronus', text(character.patronus)],
     ['Wand', [text(character.wand?.wood), text(character.wand?.core), character.wand?.length ? `${character.wand.length}"` : undefined].filter(Boolean).join(', ')],
-    ['Status', character.alive ? 'Alive' : 'Deceased'],
+    ['Status', character.alive == null ? undefined : character.alive ? 'Alive' : 'Deceased'],
     ['Role', [character.hogwartsStudent ? 'Student' : null, character.hogwartsStaff ? 'Staff' : null].filter(Boolean).join(', ')],
   ] as const;
 
