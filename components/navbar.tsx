@@ -17,7 +17,7 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur">
       <nav className="container mx-auto flex h-14 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 text-sm font-semibold">
+        <Link href="/" className="flex items-center gap-2 font-display text-base font-semibold">
           <Sparkles className="size-5" />
           <span>Harry Potter Explorer</span>
         </Link>

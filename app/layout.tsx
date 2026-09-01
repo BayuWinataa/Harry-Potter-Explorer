@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Poppins } from 'next/font/google';
+import { Cormorant_Garamond, Geist, Geist_Mono, Poppins } from 'next/font/google';
 import { Navbar } from '@/components/navbar';
 import { Providers } from './providers';
 import './globals.css';
@@ -8,6 +8,12 @@ const poppins = Poppins({
 	subsets: ['latin'],
 	weight: ['400', '500', '600', '700'],
 	variable: '--font-poppins',
+});
+
+const cormorant = Cormorant_Garamond({
+	subsets: ['latin'],
+	weight: ['600', '700'],
+	variable: '--font-display',
 });
 
 const geistSans = Geist({
@@ -27,7 +33,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className={`${poppins.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+		<html lang="en" className={`${poppins.variable} ${cormorant.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}>
 			<body className="min-h-full flex flex-col">
 				<Navbar />
 				<Providers>{children}</Providers>
