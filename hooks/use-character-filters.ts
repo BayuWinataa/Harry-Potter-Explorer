@@ -7,6 +7,7 @@ import { useDebounce } from 'use-debounce';
 import Fuse from 'fuse.js';
 import { fetchCharacters } from '@/services/hpApi';
 import { HOUSES, hpQueryKeys } from '@/types/hp';
+import type { Character } from '@/types/hp';
 
 export const SCOPES = [
   { value: 'all', label: 'All' },
@@ -34,7 +35,7 @@ export const SORT_OPTIONS = [
 
 export type SortBy = (typeof SORT_OPTIONS)[number]['value'];
 
-export function useCharacterFilters() {
+export function useCharacterFilters(initialCharacters?: Character[]) {
   const [scope, setScope] = useState<Scope>('all');
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -55,6 +56,9 @@ export function useCharacterFilters() {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: hpQueryKeys.characters,
     queryFn: fetchCharacters,
+    // Data di-fetch server (page server component) → gak ada fetch client,
+    // hydration langsung punya data → LCP & TBT turun.
+    initialData: initialCharacters,
   });
 
   // students/staff = subset of /characters via hogwartsStudent/hogwartsStaff flags

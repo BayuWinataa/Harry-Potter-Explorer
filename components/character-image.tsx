@@ -18,11 +18,13 @@ export function CharacterImage({
   image,
   className,
   sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw',
+  priority,
 }: {
   name: string;
   image?: string | null;
   className?: string;
   sizes?: string;
+  priority?: boolean;
 }) {
   const [imgError, setImgError] = useState(false);
   const showImage = image && !imgError;
@@ -34,6 +36,7 @@ export function CharacterImage({
           src={image}
           alt={name}
           fill
+          priority={priority}
           sizes={sizes}
           className="h-full w-full object-cover"
           onError={() => setImgError(true)}

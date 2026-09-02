@@ -1,21 +1,21 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { SectionHeading } from '@/components/home/section-heading';
-import { ExploreRow } from '@/components/home/explore-row';
-import { HOUSES } from '@/types/hp';
+import Image from "next/image";
+import Link from "next/link";
+import { SectionHeading } from "@/components/home/section-heading";
+import { ExploreRow } from "@/components/home/explore-row";
+import { HOUSES } from "@/types/hp";
 
 const HOUSE_TRAITS: Record<string, string> = {
-  Gryffindor: 'Courage, daring, nerve, and chivalry.',
-  Hufflepuff: 'Hard work, patience, loyalty, and fair play.',
-  Ravenclaw: 'Intelligence, wisdom, wit, and learning.',
-  Slytherin: 'Ambition, cunning, leadership, and resourcefulness.',
+  Gryffindor: "Courage, daring, nerve, and chivalry.",
+  Hufflepuff: "Hard work, patience, loyalty, and fair play.",
+  Ravenclaw: "Intelligence, wisdom, wit, and learning.",
+  Slytherin: "Ambition, cunning, leadership, and resourcefulness.",
 };
 
 const HOUSE_CREST: Record<string, string> = {
-  Gryffindor: '/houses/gryffindor.svg',
-  Hufflepuff: '/houses/hufflepuff.svg',
-  Ravenclaw: '/houses/ravenclaw.svg',
-  Slytherin: '/houses/slytherin.svg',
+  Gryffindor: "/houses/gryffindor.svg",
+  Hufflepuff: "/houses/hufflepuff.svg",
+  Ravenclaw: "/houses/ravenclaw.svg",
+  Slytherin: "/houses/slytherin.svg",
 };
 
 export default function Home() {
@@ -28,9 +28,12 @@ export default function Home() {
           fill
           priority
           sizes="100vw"
-          className="h-full w-full object-cover object-center"
+          className="h-full w-full object-cover object-[17%_center] sm:object-center"
         />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-full bg-linear-to-t from-background to-transparent" />
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-full bg-linear-to-t from-background to-transparent"
+        />
         <div className="relative z-10 mx-auto w-full px-4 pb-4 text-center sm:pb-8">
           <h1 className="font-display text-4xl text-foreground sm:text-6xl">
             Potterverse University
@@ -71,13 +74,13 @@ export default function Home() {
         </section>
 
         <section className="relative overflow-hidden py-16 sm:py-20">
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto px-4 space-y-12">
             <SectionHeading>Start Exploring</SectionHeading>
 
             <ExploreRow
               image={{
-                src: '/charakter.webp',
-                alt: 'A witch from the wizarding world',
+                src: "/charakter.webp",
+                alt: "A witch from the wizarding world",
                 width: 359,
                 height: 401,
               }}
@@ -90,8 +93,8 @@ export default function Home() {
             <ExploreRow
               reverse
               image={{
-                src: '/spelll.webp',
-                alt: 'A magic spell in the wizarding world',
+                src: "/spelll.webp",
+                alt: "A magic spell in the wizarding world",
                 width: 334,
                 height: 596,
               }}

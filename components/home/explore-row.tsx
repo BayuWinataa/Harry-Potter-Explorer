@@ -48,6 +48,7 @@ export function ExploreRow({
           alt={image.alt}
           width={image.width}
           height={image.height}
+          loading="eager"
           className="w-full object-cover"
         />
       </div>
@@ -56,17 +57,8 @@ export function ExploreRow({
 
   return (
     <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-      {reverse ? (
-        <>
-          {text}
-          {picture}
-        </>
-      ) : (
-        <>
-          {picture}
-          {text}
-        </>
-      )}
+      {picture}
+      {text}
     </div>
   );
 }

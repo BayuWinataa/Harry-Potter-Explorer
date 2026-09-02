@@ -9,9 +9,11 @@ import { HouseBadge } from '@/components/house-badge';
 export function CharacterCard({
   character,
   house,
+  priority,
 }: {
   character: Character;
   house?: string;
+  priority?: boolean;
 }) {
   // Bawa house query ke detail supaya tombol back balik dengan filter utuh.
   const href =
@@ -28,6 +30,7 @@ export function CharacterCard({
         name={character.name}
         image={character.image}
         className="aspect-square"
+        priority={priority}
       />
       <div className="flex flex-col gap-1.5 p-4">
         <span className="font-display text-lg font-semibold leading-snug">
