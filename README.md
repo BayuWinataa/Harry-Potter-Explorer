@@ -21,7 +21,7 @@ A small web app to browse the Harry Potter universe — characters, houses, and 
 - **TanStack Query** — hydrates the server-fetched character list into the client (via `Providers`)
 - **Axios** + **Zod** — typed API client with runtime response validation
 - **Fuse.js** + **use-debounce** — fuzzy name search with debounce
-- **Lenis** — smooth scrolling; list transitions are a plain CSS `animate-fade-up` (Framer Motion dropped)
+- **Lenis** — smooth scrolling; list transitions are a plain CSS `animate-fade-up`
 - **lucide-react** — icons
 - **next/font** — self-hosted 'Harry Potter' display face + Sofia Sans body, with Geist Mono
 - **Vitest** + **React Testing Library** — component tests (jsdom)
