@@ -93,7 +93,7 @@ export default function Home() {
             <ExploreRow
               reverse
               image={{
-                src: "/spelll.webp",
+                src: "/spell.webp",
                 alt: "A magic spell in the wizarding world",
                 width: 334,
                 height: 596,
