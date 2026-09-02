@@ -16,11 +16,14 @@ A small web app to browse the Harry Potter universe — characters, houses, and 
 
 ## Tech Stack
 
-- **Next.js 16** (App Router, Turbopack) — server components for detail pages, client components where state lives
-- **Tailwind CSS v4** + shadcn/ui primitives (Button, Input, Skeleton)
-- **TanStack Query** — characters fetching/caching (scoped to the characters page via `Providers`)
-- **Fuse.js** — fuzzy search
-- **Framer Motion** + **Lenis** — list transitions and smooth scrolling
+- **Next.js 16** (App Router, Turbopack) — server components for pages, client components where state lives
+- **Tailwind CSS v4** + Base UI-backed shadcn/ui-style primitives (Button, Input, Skeleton)
+- **TanStack Query** — hydrates the server-fetched character list into the client (via `Providers`)
+- **Axios** + **Zod** — typed API client with runtime response validation
+- **Fuse.js** + **use-debounce** — fuzzy name search with debounce
+- **Lenis** — smooth scrolling; list transitions are a plain CSS `animate-fade-up` (Framer Motion dropped)
+- **lucide-react** — icons
+- **next/font** — self-hosted 'Harry Potter' display face + Sofia Sans body, with Geist Mono
 - **Vitest** + **React Testing Library** — component tests (jsdom)
 
 ## Getting Started
@@ -43,8 +46,8 @@ The app calls the HP-API directly (no proxy/backend). Note the free Render insta
 
 ## Decisions & Trade-offs
 
-- **Characters fetched once, filtered client-side.** The list endpoint returns ~430 records; fetching it once and doing search/sort/filter/pagination in the client keeps interactions instant and the API calls minimal. Query is cached with React Query so navigating back to `/characters` doesn't refetch.
-- **Server components for detail pages.** `/characters/[id]` and `/spells` are server components fetching their data — better for SEO, no client waterfalls, and `generateMetadata` derives the page title from the character. Both use `unstable_cache` (1h revalidation) since the free-tier API is slow to warm up and characters/spells change rarely.
+- **Characters fetched once on the server, filtered client-side.** `/characters` is a server component that fetches the list and wraps it in `unstable_cache` (1h revalidate). The array hydrates a TanStack Query (5 min staleTime, so no refetch on mount) and the ~430 records stay in memory — search, sort, house/scope filters, and pagination all run client-side, keeping interactions instant.
+- **Server components on every data page.** `/characters/[id]`, `/spells`, and `/characters` all fetch server-side through `unstable_cache` (1h revalidation) — better for SEO, no client waterfalls, and `generateMetadata` derives the detail-page title from the character. The house filter is kept in the URL (`?house=…`), so a character's back-link restores the list you came from.
 - **House colors as fixed map, not an API.** The API has no `/houses` endpoint (per the assignment notes), so houses are a fixed constant list with their heraldic colors.
 - **Tests cover the risky bits, not everything.** A small Vitest + Testing Library suite checks the `CharacterDetail` alive-status rendering (a real null-handling bug) and the `CharacterImage` image/fallback branch. Filter logic is thin wrappers over React Query + Fuse.js, which are better covered by integration/E2E.
 - **No /incantation on spells.** The HP-API spells endpoint only returns `name` and `description`, so the spells page renders those.
